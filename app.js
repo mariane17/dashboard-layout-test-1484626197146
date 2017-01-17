@@ -1,28 +1,51 @@
-/*eslint-env node*/
+/*jslint node:true*/
+/*eslint no-unused-params:0*/
+/* These lines are hints to the code editor */
 
-//------------------------------------------------------------------------------
-// node.js starter application for Bluemix
-//------------------------------------------------------------------------------
+/**
+ * Load the appropriate modules for our web application
+*/
+var http = require('http');
+var path = require('path');
+var express = require('express');   // The ExpressJS framework
+var morgan  = require('morgan');    // For clearing logging messages
 
-// This application uses express as its web server
-// for more info, see: http://expressjs.com
-var express = require('express');
-
-// cfenv provides access to your Cloud Foundry environment
-// for more info, see: https://www.npmjs.com/package/cfenv
-var cfenv = require('cfenv');
-
-// create a new express server
+/**
+ * Setup the Express engine
+**/
 var app = express();
+app.set('port', process.env.PORT || 3000);
+app.set('view engine', 'ejs');
 
-// serve the files out of ./public as our main files
-app.use(express.static(__dirname + '/public'));
+// Stuff to do for all routes
+app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, 'public')));	//tells app to look in public directory for initial page to render
 
-// get the app environment from Cloud Foundry
-var appEnv = cfenv.getAppEnv();
 
-// start server on the specified port and binding host
-app.listen(appEnv.port, '0.0.0.0', function() {
-  // print a message when the server starts listening
-  console.log("server starting on " + appEnv.url);
+/**
+ * This is our home route.  This gets called when we visit our
+ * base address http://MYSERVERNAME.mybluemix.net/
+**/
+var userCount = 0;
+/* add var definition for your new variable, userbytwo here */
+var userbytwo = 0;
+
+app.get('/', function(req, res){
+  userCount = userCount + 1;
+  /* add statement to increment userbytwo by two here */
+  userbytwo = userbytwo +1;
+  //following line passes data to the web page or html
+  res.render('index', {userCount: userCount, userbytwo: userbytwo}); /* update this line to also pass userbytwo */
 });
+
+/**
+ * This is where the server is created and run.  Everything previous to this
+ * was configuration for this server.
+**/
+var server = http.createServer(app);
+server.listen(app.get('port'), function(){
+   console.log('Express server listening on port ' + app.get('port'));
+});
+
+
+

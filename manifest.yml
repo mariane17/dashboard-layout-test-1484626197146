@@ -3,6 +3,6 @@ applications:
   memory: 256M
   instances: 1
   domain: mybluemix.net
-  name: dashboard-layout-test
-  host: dashboard-layout-test
+  name: dashboard-layout-test-delvo
+  host: dashboard-layout-test-delvo
   disk_quota: 1024M
